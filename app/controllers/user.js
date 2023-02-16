@@ -11,6 +11,16 @@ const userController = {
       } catch (err) {
         console.error(err);
       }
+    },
+
+    findOne: async (request, response) => {
+        try {
+            const { id } = request.params
+            const user = await User.getOne(id);
+            response.status(200).json(user);
+        } catch (err) {
+            console.log(err);
+        }
     }
   };
   
