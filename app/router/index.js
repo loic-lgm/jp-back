@@ -1,6 +1,8 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const user = require('./user');
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+const router = express.Router();
+
+router.use('/users',  user);
+
+module.exports = router;
