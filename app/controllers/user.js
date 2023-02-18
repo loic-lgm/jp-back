@@ -22,6 +22,7 @@ const userController = {
         console.log(err);
       }
     },
+
     create: async (request, response) => {
       try {
         const currentDate = new Date();
@@ -62,6 +63,10 @@ const userController = {
         console.log(err)
         response.status(400).json({ error: "User was not created" });
       }
+    },
+
+    update: async (request, response) => {
+      const user = request.body
     }
   };
   
