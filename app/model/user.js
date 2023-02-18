@@ -32,7 +32,7 @@ const User = {
 
   async getByEmail(email) {
     const user = await pool.query(
-      `SELECT username, email, role, day_score, global_score, created_at, updated_at FROM user_account WHERE email = $1`,
+      `SELECT username, email, password, role, day_score, global_score, created_at, updated_at FROM user_account WHERE email = $1`,
       [email]
     );
     return user.rows[0];
