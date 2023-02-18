@@ -36,6 +36,20 @@ const authController = {
         }
       );
     },
-  
+
+    authorization: async(request, response) => {
+        // Si le token est valide on renvoit le token ainsi que les données de l'utilisateur
+        const token = request.token;
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, results) => {
+            if(error){
+                return response.status(500);
+            }
+            const userData = results;
+            console.log(userData);
+            const { password, ...authData } = userData;
+      
+            response.json({ authData, token });
+        });
+      }
   };
   module.exports = authController;
