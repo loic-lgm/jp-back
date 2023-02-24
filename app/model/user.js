@@ -2,13 +2,13 @@ const pool = require("../config");
 
 const User = {
   async getAll() {
-    const users = await pool.query(`SELECT username, email, role, day_score, global_score, created_at, updated_at FROM user_account;`);
+    const users = await pool.query(`SELECT * FROM user_account;`);
     return users.rows;
   },
 
   async getOne(id) {
     const user = await pool.query(
-        `SELECT username, email, role, day_score, global_score, created_at, updated_at FROM user_account WHERE id = $1;`, 
+        `SELECT * FROM user_account WHERE id = $1;`, 
         [id]
     );
     return user.rows[0];
@@ -36,7 +36,14 @@ const User = {
       [email]
     );
     return user.rows[0];
-  }
+  },
+
+  async update(user){
+    const userToUpdate = await pool.query(`
+        UPDATE "user_account" SET username = $1, email = $2, password = $3, role = $4, day_score = $5, global_score = $6, created_at = $7, updated_at = $8 WHERE id = $9;`,
+        [user.username, user.email, user.password, user.role, user.day_score, user.global_score, user.created_at, user.updated_at, user.id]);
+        return userToUpdate;
+  },
 }
 
 module.exports = User;

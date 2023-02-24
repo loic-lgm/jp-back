@@ -66,7 +66,39 @@ const userController = {
     },
 
     update: async (request, response) => {
-      const user = request.body
+      try {
+        const { id } = request.params;
+        const user = request.body;
+        const dateNow = new Date();
+        const userToUpdate = await User.getOne(id);
+        const existingUserByEmail = await User.getByEmail(userToUpdate.email);
+        const existingUserByUsersname = await User.getByUsername(userToUpdate.username);
+
+        if (!userToUpdate) return response.status(400).json("User not found");
+        if (user.email != userToUpdate.email && existingUserByEmail) return response.status(409).json(`Email already exists`);
+        if (user.username != userToUpdate.username && existingUserByUsersname) return response.status(409).json(`Username already exists`);
+        
+        const newPassword = bcrypt.hash(user.password, 5, async function(error, bcryptPassword) {
+          return bcryptPassword
+        })
+  
+        await User.update({
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          password: newPassword ? newPassword : userToUpdate.password,
+          role: user.role ? user.role : userToUpdate.role,
+          day_score: user.day_score ? user.day_score : userToUpdate.day_score,
+          global_score: user.global_score ? user.global_score : userToUpdate.global_score,
+          created_at: userToUpdate.created_at,
+          updated_at: dateNow
+        })
+
+        response.status(200).json("Updated succesfully");
+      } catch (err) {
+        console.log(err)
+        response.status(500).json("Error occured");
+      }
     }
   };
   
