@@ -7,11 +7,11 @@ const Category = {
   },
 
   async getOne(id) {
-    const user = await pool.query(
-        `SELECT * FROM user_account WHERE id = $1;`, 
+    const category = await pool.query(
+        `SELECT * FROM category WHERE id = $1;`, 
         [id]
     );
-    return user.rows[0];
+    return category.rows[0];
   },
 
   async create(user) {
