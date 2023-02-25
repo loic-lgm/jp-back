@@ -99,6 +99,21 @@ const userController = {
         console.log(err)
         response.status(500).json("Error occured");
       }
+    },
+
+    delete: async (request, response) => {
+      try {
+        const {id} = request.params;
+        const userToDelete = User.getOne(id);
+
+        if (!userToDelete) return response.status(400).json('User not found');
+
+        await User.delete(id)
+        response.status(200).json('User deleted succesfully');
+      } catch (err) {
+        console.log(err);
+        response.status(500).json('Error occured');
+      }
     }
   };
   

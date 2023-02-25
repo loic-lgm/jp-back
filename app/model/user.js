@@ -44,6 +44,13 @@ const User = {
         [user.username, user.email, user.password, user.role, user.day_score, user.global_score, user.created_at, user.updated_at, user.id]);
         return userToUpdate;
   },
+
+  async delete(id) {
+    await pool.query(
+      `DELETE FROM "user_account" WHERE id = $1;`,
+      [id]
+    )
+  }
 }
 
 module.exports = User;
