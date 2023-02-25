@@ -1,7 +1,5 @@
 const User = require("../model/user");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const secret = process.env.ACCESS_TOKEN_SECRET;
 
 const userController = {
     findAll: async (request, response) => {
