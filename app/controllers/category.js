@@ -50,7 +50,7 @@ const categoryController = {
     try {
       const {id} = request.params;
       const existingCategory = await Category.getOne(id);
-      if (!existingCategory) return response.status(404).json('Category not found')
+      if (!existingCategory) return response.status(404).json('Category not found');
 
       const category = request.body;
       if (!category.name || !category.description) return response.status(400).json('All fields must be filled');
@@ -65,6 +65,21 @@ const categoryController = {
       }))
       response.status(200).json('Category updated succesfully');
     } catch (err) {
+      console.log(err);
+      response.status(500).json('Error occured');
+    }
+  },
+
+  delete: async (request, response) => {
+    try {
+      const {id} = request.params;
+      const existingCategory = await Category.getOne(id);
+      if (!existingCategory) return response.status(404).json('Category not found');
+
+      await Category.delete(id);
+      response.status(200).json('Category deleted succesfully');
+
+    } catch(err) {
       console.log(err);
       response.status(500).json('Error occured');
     }

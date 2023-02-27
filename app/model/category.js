@@ -39,7 +39,7 @@ const Category = {
 
   async delete(id) {
     await pool.query(
-      `DELETE FROM "user_account" WHERE id = $1;`,
+      `DELETE FROM "category" WHERE id = $1;`,
       [id]
     )
   }
