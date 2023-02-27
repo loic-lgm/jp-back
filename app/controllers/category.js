@@ -25,6 +25,49 @@ const categoryController = {
       console.log(err);
       response.status(500).json('Error occured');
     }
+  },
+
+  create: async (request, response) => {
+    try {
+      const category = request.body;
+      if (!category.name || !category.description) return response.status(400).json('All fields must be filled');
+
+      const existingCategory = await Category.getByName(category.name.toLowerCase());
+      if (existingCategory) return response.status(409).json(`Category ${category.name} already exists`)
+
+      await Category.create({
+        name: category.name.toLowerCase(),
+        description: category.description
+      })
+      response.status(200).json(`Category ${category.name} created succesfully`);
+    } catch (err) {
+      console.log(err);
+      response.status(500).json('Error occured');
+    }
+  },
+
+  update: async (request, response) => {
+    try {
+      const {id} = request.params;
+      const existingCategory = await Category.getOne(id);
+      if (!existingCategory) return response.status(404).json('Category not found')
+
+      const category = request.body;
+      if (!category.name || !category.description) return response.status(400).json('All fields must be filled');
+
+      const existingCategoryByName = await Category.getByName(category.name.toLowerCase());
+      if (category.name !== existingCategory.name && existingCategoryByName) return response.status(409).json(`Category ${category.name} already exists`);
+
+      console.log(await Category.update({
+        id: id,
+        name: category.name.toLowerCase(),
+        description: category.description
+      }))
+      response.status(200).json('Category updated succesfully');
+    } catch (err) {
+      console.log(err);
+      response.status(500).json('Error occured');
+    }
   }
 }
 
