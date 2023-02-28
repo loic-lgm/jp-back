@@ -52,21 +52,25 @@ const sentenceController = {
 
   update: async (request, response) => {
     try {
+      const date = new Date();
       const {id} = request.params;
-      const existingCategory = await Category.getOne(id);
-      if (!existingCategory) return response.status(404).json('Category not found');
+      const existingSentence = await Sentence.getOne(id);
+      if (!existingSentence) return response.status(404).json('Sentence not found');
 
-      const category = request.body;
-      if (!category.name || !category.description) return response.status(400).json('All fields must be filled');
+      const sentence = request.body;
+      if (!sentence.description || !sentence.crime_year || !sentence.jail_time || !sentence.country) return response.status(400).json('All fields must be filled');
 
-      const existingCategoryByName = await Category.getByName(category.name.toLowerCase());
-      if (category.name !== existingCategory.name && existingCategoryByName) return response.status(409).json(`Category ${category.name} already exists`);
+      const existingSentenceByDescription = await Sentence.getByDescription(sentence.description.toLowerCase());
+      if (sentence.description !== existingSentence.descritpion && existingSentenceByDescription) return response.status(409).json(`Sentence already exists`);
 
-      console.log(await Category.update({
+      await Sentence.update({
         id: id,
-        name: category.name.toLowerCase(),
-        description: category.description
-      }))
+        description: sentence.description.toLowerCase(),
+        crime_year: sentence.crime_year,
+        jail_time: sentence.jail_time,
+        country: sentence.country,
+        updated_at: date
+      })
       response.status(200).json('Category updated succesfully');
     } catch (err) {
       console.log(err);

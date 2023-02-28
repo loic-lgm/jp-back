@@ -14,8 +14,8 @@ const Sentence = {
   async getOne(id) {
     const sentence = await pool.query(`
       SELECT sentence.*, array_agg(DISTINCT category.name) AS categories FROM sentence
-      INNER JOIN sentence_category ON sentence.id = sentence_category.id_sentence
-      INNER JOIN category ON category.id = sentence_category.id_category
+      LEFT JOIN sentence_category ON sentence.id = sentence_category.id_sentence
+      LEFT JOIN category ON category.id = sentence_category.id_category
       WHERE sentence.id = $1
       GROUP BY sentence.id
       ;`, 
@@ -40,11 +40,11 @@ const Sentence = {
     return sentence.rows[0];
   },
 
-  async update(category){
-    const categoryToUpdate = await pool.query(`
-        UPDATE "category" SET name = $1, description = $2 WHERE id = $3;`,
-        [category.name, category.description, category.id]);
-        return categoryToUpdate;
+  async update(sentence){
+    const sentenceToUpdate = await pool.query(`
+        UPDATE "sentence" SET description = $1, crime_year = $2, jail_time = $3, country = $4, updated_at = $5 WHERE id = $6;`,
+        [sentence.description, sentence.crime_year, sentence.jail_time, sentence.country, sentence.udpated_at, sentence.id]);
+        return sentenceToUpdate;
   },
 
   async delete(id) {

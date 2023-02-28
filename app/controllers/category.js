@@ -58,11 +58,11 @@ const categoryController = {
       const existingCategoryByName = await Category.getByName(category.name.toLowerCase());
       if (category.name !== existingCategory.name && existingCategoryByName) return response.status(409).json(`Category ${category.name} already exists`);
 
-      console.log(await Category.update({
+      await Category.update({
         id: id,
         name: category.name.toLowerCase(),
         description: category.description
-      }))
+      })
       response.status(200).json('Category updated succesfully');
     } catch (err) {
       console.log(err);
