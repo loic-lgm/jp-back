@@ -4,6 +4,7 @@ const verifyPermissions = require('../middlewares/verifyPermissions')
 const router = express.Router();
 
 router.get('/', sentenceController.findAll);
+router.get('/getrandoms', sentenceController.findRandoms);
 router.get('/:id', sentenceController.findOne);
 router.post('/create', verifyPermissions, sentenceController.create);
 router.put('/:id/update', verifyPermissions, sentenceController.update);

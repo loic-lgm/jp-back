@@ -12,6 +12,17 @@ const sentenceController = {
     }
   },
 
+  findRandoms: async (request, response) => {
+    try {
+      const sentences = await Sentence.getRandoms(1)
+      response.status(200).json(sentences);
+
+    } catch (err) {
+      console.log(err)
+      response.status(500).json('Error occured');
+    }
+  },
+
   findOne: async (request, response) => {
     try {
       const {id} = request.params;
@@ -31,6 +42,7 @@ const sentenceController = {
     try {
       const date = new Date();
       const sentence = request.body;
+
       if (!sentence.description || !sentence.crime_year || !sentence.jail_time || !sentence.country) return response.status(400).json('All fields must be filled');
 
       const existingSentence = await Sentence.getByDescription(sentence.description.toLowerCase());
