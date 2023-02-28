@@ -29,17 +29,21 @@ const sentenceController = {
 
   create: async (request, response) => {
     try {
-      const category = request.body;
-      if (!category.name || !category.description) return response.status(400).json('All fields must be filled');
+      const date = new Date();
+      const sentence = request.body;
+      if (!sentence.description || !sentence.crime_year || !sentence.jail_time || !sentence.country) return response.status(400).json('All fields must be filled');
 
-      const existingCategory = await Category.getByName(category.name.toLowerCase());
-      if (existingCategory) return response.status(409).json(`Category ${category.name} already exists`)
+      const existingSentence = await Sentence.getByDescription(sentence.description.toLowerCase());
+      if (existingSentence) return response.status(409).json(`Sentence ${sentence.description} already exists`)
 
-      await Category.create({
-        name: category.name.toLowerCase(),
-        description: category.description
+      await Sentence.create({
+        description: sentence.description.toLowerCase(),
+        crime_year: sentence.crime_year,
+        jail_time: sentence.jail_time,
+        country: sentence.country.toLowerCase(),
+        created_at: date
       })
-      response.status(200).json(`Category ${category.name} created succesfully`);
+      response.status(200).json(`Sentence created succesfully`);
     } catch (err) {
       console.log(err);
       response.status(500).json('Error occured');

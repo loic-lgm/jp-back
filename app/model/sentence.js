@@ -4,15 +4,15 @@ const Sentence = {
   async getAll() {
     const sentences = await pool.query(`
       SELECT sentence.*, array_agg(DISTINCT category.name) AS categories FROM sentence
-      INNER JOIN sentence_category ON sentence.id = sentence_category.id_sentence
-      INNER JOIN category ON category.id = sentence_category.id_category
+      LEFT JOIN sentence_category ON sentence.id = sentence_category.id_sentence
+      LEFT JOIN category ON category.id = sentence_category.id_category
       GROUP BY sentence.id
     ;`);
     return sentences.rows;
   },
 
   async getOne(id) {
-    const category = await pool.query(`
+    const sentence = await pool.query(`
       SELECT sentence.*, array_agg(DISTINCT category.name) AS categories FROM sentence
       INNER JOIN sentence_category ON sentence.id = sentence_category.id_sentence
       INNER JOIN category ON category.id = sentence_category.id_category
@@ -21,23 +21,23 @@ const Sentence = {
       ;`, 
       [id]
     );
-    return category.rows[0];
+    return sentence.rows[0];
   },
 
-  async create(category) {
-    const newCategory = await pool.query(
-      `INSERT INTO category ("name", "description") VALUES ($1,$2);`, 
-      [category.name, category.description]
+  async create(sentence) {
+    const newSentence = await pool.query(
+      `INSERT INTO sentence ("description", "crime_year", "jail_time", "country", "created_at") VALUES ($1,$2,$3,$4,$5);`, 
+      [sentence.description, sentence.crime_year, sentence.jail_time, sentence.country, sentence.created_at]
     );
-    return newCategory;
+    return newSentence;
   },
 
-  async getByName(name) {
-    const category = await pool.query(
-      `SELECT * FROM category WHERE name = $1`,
-      [name]
+  async getByDescription(description) {
+    const sentence = await pool.query(
+      `SELECT * FROM sentence WHERE description = $1`,
+      [description]
     );
-    return category.rows[0];
+    return sentence.rows[0];
   },
 
   async update(category){
