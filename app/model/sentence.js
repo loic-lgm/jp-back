@@ -12,9 +12,14 @@ const Sentence = {
   },
 
   async getOne(id) {
-    const category = await pool.query(
-        `SELECT * FROM category WHERE id = $1;`, 
-        [id]
+    const category = await pool.query(`
+      SELECT sentence.*, array_agg(DISTINCT category.name) AS categories FROM sentence
+      INNER JOIN sentence_category ON sentence.id = sentence_category.id_sentence
+      INNER JOIN category ON category.id = sentence_category.id_category
+      WHERE sentence.id = $1
+      GROUP BY sentence.id
+      ;`, 
+      [id]
     );
     return category.rows[0];
   },

@@ -15,9 +15,9 @@ const sentenceController = {
   findOne: async (request, response) => {
     try {
       const {id} = request.params;
-      const category = await Category.getOne(id);
-      if (category) {
-        response.status(200).json(category);
+      const sentence = await Sentence.getOne(id);
+      if (sentence) {
+        response.status(200).json(sentence);
       } else {
         response.status(404).json('404 Not found')
       }

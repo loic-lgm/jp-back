@@ -4,7 +4,7 @@ const verifyPermissions = require('../middlewares/verifyPermissions')
 const router = express.Router();
 
 router.get('/', sentenceController.findAll);
-// router.get('/:id', categoryController.findOne);
+router.get('/:id', sentenceController.findOne);
 // router.post('/create', verifyPermissions, categoryController.create);
 // router.put('/:id/update', verifyPermissions, categoryController.update);
 // router.delete('/:id/delete', verifyPermissions, categoryController.delete);
