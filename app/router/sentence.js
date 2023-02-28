@@ -7,6 +7,6 @@ router.get('/', sentenceController.findAll);
 router.get('/:id', sentenceController.findOne);
 router.post('/create', verifyPermissions, sentenceController.create);
 router.put('/:id/update', verifyPermissions, sentenceController.update);
-// router.delete('/:id/delete', verifyPermissions, categoryController.delete);
+router.delete('/:id/delete', verifyPermissions, sentenceController.delete);
 
 module.exports = router;

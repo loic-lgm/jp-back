@@ -49,7 +49,7 @@ const Sentence = {
 
   async delete(id) {
     await pool.query(
-      `DELETE FROM "category" WHERE id = $1;`,
+      `DELETE FROM "sentence" WHERE id = $1;`,
       [id]
     )
   }

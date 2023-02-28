@@ -81,11 +81,11 @@ const sentenceController = {
   delete: async (request, response) => {
     try {
       const {id} = request.params;
-      const existingCategory = await Category.getOne(id);
-      if (!existingCategory) return response.status(404).json('Category not found');
+      const existingSentence = await Sentence.getOne(id);
+      if (!existingSentence) return response.status(404).json('Sentence not found');
 
-      await Category.delete(id);
-      response.status(200).json('Category deleted succesfully');
+      await Sentence.delete(id);
+      response.status(200).json('Sentence deleted succesfully');
 
     } catch(err) {
       console.log(err);
