@@ -1,4 +1,6 @@
 const Sentence = require("../model/sentence");
+const Category = require("../model/category");
+const Sentence_Category = require("../model/sentence_category");
 
 const sentenceController = {
   findAll: async (request, response) => {
@@ -42,20 +44,37 @@ const sentenceController = {
     try {
       const date = new Date();
       const sentence = request.body;
+      const categoryIds = sentence.categories;
 
       if (!sentence.description || !sentence.crime_year || !sentence.jail_time || !sentence.country) return response.status(400).json('All fields must be filled');
 
       const existingSentence = await Sentence.getByDescription(sentence.description.toLowerCase());
       if (existingSentence) return response.status(409).json(`Sentence ${sentence.description} already exists`)
 
-      await Sentence.create({
+      const createdSentence = await Sentence.create({
         description: sentence.description.toLowerCase(),
         crime_year: sentence.crime_year,
         jail_time: sentence.jail_time,
         country: sentence.country.toLowerCase(),
         created_at: date
       })
-      response.status(200).json(`Sentence created succesfully`);
+
+      if (categoryIds && categoryIds.length > 0) {
+        categoryIds.forEach(async categoryId => {
+          try {
+            if (await Category.getOne(categoryId)) {
+              await Sentence_Category.create({
+                id_sentence: createdSentence.id,
+                id_category: categoryId
+              })
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        })
+      }
+
+      return response.status(200).json(`Sentence created succesfully`);
     } catch (err) {
       console.log(err);
       response.status(500).json('Error occured');

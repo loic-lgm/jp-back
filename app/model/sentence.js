@@ -37,10 +37,10 @@ const Sentence = {
 
   async create(sentence) {
     const newSentence = await pool.query(
-      `INSERT INTO sentence ("description", "crime_year", "jail_time", "country", "created_at") VALUES ($1,$2,$3,$4,$5);`, 
+      `INSERT INTO sentence ("description", "crime_year", "jail_time", "country", "created_at") VALUES ($1,$2,$3,$4,$5) RETURNING*;`, 
       [sentence.description, sentence.crime_year, sentence.jail_time, sentence.country, sentence.created_at]
     );
-    return newSentence;
+    return newSentence.rows[0];
   },
 
   async getByDescription(description) {
