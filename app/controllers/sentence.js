@@ -81,11 +81,6 @@ const sentenceController = {
     }
   },
 
-  link: async (request, response) => {
-    const link = await Sentence_Category.getAll();
-    response.status(200).json(link);
-  },
-
   update: async (request, response) => {
     try {
       const date = new Date();
