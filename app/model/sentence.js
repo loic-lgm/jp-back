@@ -53,9 +53,9 @@ const Sentence = {
 
   async update(sentence){
     const sentenceToUpdate = await pool.query(`
-        UPDATE "sentence" SET description = $1, crime_year = $2, jail_time = $3, country = $4, updated_at = $5 WHERE id = $6;`,
+        UPDATE "sentence" SET description = $1, crime_year = $2, jail_time = $3, country = $4, updated_at = $5 WHERE id = $6 RETURNING*;`,
         [sentence.description, sentence.crime_year, sentence.jail_time, sentence.country, sentence.udpated_at, sentence.id]);
-        return sentenceToUpdate;
+        return sentenceToUpdate.rows[0];
   },
 
   async delete(id) {

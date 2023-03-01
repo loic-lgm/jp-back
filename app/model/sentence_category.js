@@ -8,18 +8,25 @@ const Sentence_Category = {
     return newSentenceCategory.rows;
   },
 
-  async findByPlantId(id)  {
-    const plantClimat = await pool.query(`
-    SELECT * FROM plant_climat
-    WHERE plant_climat.plant_id = $1;`,
+  async getBySentenceId(id)  {
+    const sentenceCategory = await pool.query(`
+    SELECT * FROM sentence_category
+    WHERE sentence_category.id_sentence = $1;`,
       [id]
     );
-    return plantClimat.rows[0];
+    return sentenceCategory.rows;
+  },
+
+  async getAll() {
+    const all = await pool.query(`
+      SELECT * FROM sentence_category`,
+    );
+    return all.rows;
   },
 
   async delete(id_sentence){
     await pool.query(`
-        DELETE FROM "sentence_category" WHERE id_sentence_id = $1;`,[id_sentence]);
+      DELETE FROM "sentence_category" WHERE id_sentence = $1;`,[id_sentence]);
   }
 }
 

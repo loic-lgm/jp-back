@@ -81,6 +81,11 @@ const sentenceController = {
     }
   },
 
+  link: async (request, response) => {
+    const link = await Sentence_Category.getAll();
+    response.status(200).json(link);
+  },
+
   update: async (request, response) => {
     try {
       const date = new Date();
@@ -92,9 +97,9 @@ const sentenceController = {
       if (!sentence.description || !sentence.crime_year || !sentence.jail_time || !sentence.country) return response.status(400).json('All fields must be filled');
 
       const existingSentenceByDescription = await Sentence.getByDescription(sentence.description.toLowerCase());
-      if (sentence.description !== existingSentence.descritpion && existingSentenceByDescription) return response.status(409).json(`Sentence already exists`);
-
-      await Sentence.update({
+      if (sentence.description == existingSentence.descritpion && existingSentenceByDescription) return response.status(409).json(`Sentence already exists`);
+      
+      const updatedSentence = await Sentence.update({
         id: id,
         description: sentence.description.toLowerCase(),
         crime_year: sentence.crime_year,
@@ -102,7 +107,45 @@ const sentenceController = {
         country: sentence.country,
         updated_at: date
       })
-      response.status(200).json('Category updated succesfully');
+      const categoryIds = sentence.categories;
+      const sentencesCategories = await Sentence_Category.getBySentenceId(id);
+      const existingSentencesCategories = [];
+      sentencesCategories.forEach(sentenceCategory => {
+        existingSentencesCategories.push(sentenceCategory.id_category);
+      })
+
+
+      if (categoryIds && categoryIds.length > 0) {
+        categoryIds.forEach(async categoryId => {
+          try {
+            if (existingSentencesCategories && existingSentencesCategories.length > 0) {
+              existingSentencesCategories.forEach(async existingSentenceCategory => {
+                if (existingSentenceCategory.id_category !== categoryId) {
+                  await Sentence_Category.delete(id)
+                }
+              })
+            }
+            if (await Category.getOne(categoryId)) {
+              await Sentence_Category.create({
+                id_sentence: updatedSentence.id,
+                id_category: categoryId
+              })
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        })
+      }
+
+      // if (plantClimat.climat_id !== climatId) {
+      //   await PlantClimat.delete(id);
+      //   await PlantClimat.create({
+      //     plant_id: id,
+      //     climat_id: climatId
+      //   })
+      // }
+
+      response.status(200).json('Sentence updated succesfully');
     } catch (err) {
       console.log(err);
       response.status(500).json('Error occured');
