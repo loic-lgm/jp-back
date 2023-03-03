@@ -12,12 +12,19 @@ const Sentence = {
   },
 
   async getRandoms(number) {
+    // const sentences = await pool.query(`
+    //   SELECT sentence.*, array_agg(DISTINCT category.name) AS categories FROM sentence
+    //   LEFT JOIN sentence_category ON sentence.id = sentence_category.id_sentence
+    //   LEFT JOIN category ON category.id = sentence_category.id_category
+    //   GROUP BY sentence.id
+    //   OFFSET floor(random() * (SELECT count(*) FROM sentence)) LIMIT $1
+    // ;`, [number]);
     const sentences = await pool.query(`
       SELECT sentence.*, array_agg(DISTINCT category.name) AS categories FROM sentence
       LEFT JOIN sentence_category ON sentence.id = sentence_category.id_sentence
       LEFT JOIN category ON category.id = sentence_category.id_category
       GROUP BY sentence.id
-      OFFSET floor(random() * (SELECT count(*) FROM sentence)) LIMIT $1
+      ORDER BY random() LIMIT $1
     ;`, [number]);
     return sentences.rows;
   },
