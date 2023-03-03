@@ -16,7 +16,7 @@ const sentenceController = {
 
   findRandoms: async (request, response) => {
     try {
-      const sentences = await Sentence.getRandoms(1)
+      const sentences = await Sentence.getRandoms(3)
       response.status(200).json(sentences);
 
     } catch (err) {
