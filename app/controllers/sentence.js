@@ -16,8 +16,8 @@ const sentenceController = {
 
   findR3ByIds: async (request, response) => {
     try {
-      const {ids} = request.body
-      const sentences = await Sentence.get3SentencesByIds(ids)
+      const {id1, id2, id3} = request.params
+      const sentences = await Sentence.get3SentencesByIds(id1, id2, id3)
       response.status(200).json(sentences);
 
     } catch (err) {

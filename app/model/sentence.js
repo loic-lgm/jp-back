@@ -11,14 +11,14 @@ const Sentence = {
     return sentences.rows;
   },
 
-  async get3SentencesByIds(ids) {
+  async get3SentencesByIds(id1, id2, id3) {
     const sentences = await pool.query(`
       SELECT sentence.*, array_agg(DISTINCT category.name) AS categories FROM sentence
       LEFT JOIN sentence_category ON sentence.id = sentence_category.id_sentence
       LEFT JOIN category ON category.id = sentence_category.id_category
       WHERE sentence.id IN ($1, $2, $3)
       GROUP BY sentence.id
-    ;`, [ids[0], ids[1], ids[2]]);
+    ;`, [id1, id2, id3]);
     return sentences.rows;
   },
 
