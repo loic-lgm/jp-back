@@ -14,9 +14,10 @@ const sentenceController = {
     }
   },
 
-  findRandoms: async (request, response) => {
+  findR3ByIds: async (request, response) => {
     try {
-      const sentences = await Sentence.getRandoms(3)
+      const {ids} = request.body
+      const sentences = await Sentence.get3SentencesByIds(ids)
       response.status(200).json(sentences);
 
     } catch (err) {
